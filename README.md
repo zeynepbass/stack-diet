@@ -73,9 +73,7 @@ Bu projede kullanıcılar çeşitli etkileşimlerde bulunabilir ve kendi profill
 <p align="center">
   <img src="./client/public/images/screenshots/1745447873739.jpeg" alt="Profile" width="900">
 </p>
-<p align="center">
-  <img src="./client/public/images/screenshots/1745447873739.jpeg" alt="Profile" width="900">
-</p>
+
 <p align="center">
   <img src="./client/public/images/screenshots/1745447873701.jpeg" alt="Sifremi Unuttum" width="900">
 </p>
