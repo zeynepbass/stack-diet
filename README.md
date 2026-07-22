@@ -48,6 +48,8 @@ Bu projede kullanıcılar çeşitli etkileşimlerde bulunabilir ve kendi profill
 - Gerçek zamanlı bildirim ve etkileşimleri uygulamak  
 - Teknik altyapıyı güçlendirmek ve full-stack yetkinliği artırmak
 
+---
+
 ## Arayüzler
 
 <p align="center">
