@@ -1,5 +1,5 @@
 
-STACK Diyet, kullanıcıların sağlıklı yaşam odaklı içerikler paylaşabildiği, gönderileri beğenip yorumlayabildiği ve diğer kullanıcılarla etkileşim kurabildiği sosyal bir web uygulamasıdır. Kullanıcı profili yönetimi, gönderi paylaşımı, arama, bildirimler ve kullanıcı etkileşimleri gibi özellikler sunan proje, React, Node.js, Express.js, MongoDB ve Zustand kullanılarak geliştirilmiştir.
+STACK Diyet, kullanıcıların sağlıklı yaşam odaklı içerikler paylaşabildiği, gönderileri beğenip yorumlayabildiği ve diğer kullanıcılarla etkileşim kurabildiği sosyal bir web uygulamasıdır. 
 
 ---
 
