@@ -1,8 +1,5 @@
 
-Son dönemde büyük bir heyecanla üzerinde çalıştığım diyet ve sağlıklı 
-yaşam temalı web uygulamamı tamamladım!  
-
-Bu projede kullanıcılar çeşitli etkileşimlerde bulunabilir ve kendi profillerini yönetebilir.
+STACK Diyet, kullanıcıların sağlıklı yaşam odaklı içerikler paylaşabildiği, gönderileri beğenip yorumlayabildiği ve diğer kullanıcılarla etkileşim kurabildiği sosyal bir web uygulamasıdır. Kullanıcı profili yönetimi, gönderi paylaşımı, arama, bildirimler ve kullanıcı etkileşimleri gibi özellikler sunan proje, React, Node.js, Express.js, MongoDB ve Zustand kullanılarak geliştirilmiştir.
 
 ---
 
