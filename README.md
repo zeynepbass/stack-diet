@@ -1,5 +1,5 @@
 
-STACK Diyet, kullanıcıların sağlıklı yaşam odaklı içerikler paylaşabildiği, gönderileri beğenip yorumlayabildiği ve diğer kullanıcılarla etkileşim kurabildiği sosyal bir web uygulamasıdır. 
+Stack Diet, kullanıcıların sağlıklı yaşam odaklı içerikler paylaşabildiği, gönderileri beğenip yorumlayabildiği ve diğer kullanıcılarla etkileşim kurabildiği sosyal bir web uygulamasıdır. 
 
 ---
 
