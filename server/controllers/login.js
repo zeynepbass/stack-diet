@@ -46,7 +46,6 @@ const duzenle = async (req, res) => {
   
         res.status(200).json(updatedUser);
     } catch (error) {
-        console.error(error);
         res.status(500).send("Internal Server Error");
     }
   };
@@ -77,7 +76,6 @@ const Delete = async (req, res) => {
 
       res.status(200).json({ message: 'Kullanıcı silindi' });
     } catch (error) {
-      console.error('Kullanıcı silme hatası:', error);
       res.status(500).json({ message: 'Bir hata oluştu' });
     }
   };
@@ -106,12 +104,11 @@ const signup = async (req, res) => {
         });
 
 
-        const token = jwt.sign({ email: result.email, id: result._id }, 'aos-secret-key', { expiresIn: '30d' });
+        const token = jwt.sign({ email: result.email, id: result._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
       
         res.status(200).json({ result, token });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Bir hata oluştu' });
     }
 };
@@ -138,7 +135,6 @@ const signPassword = async (req, res) => {
 
         res.status(200).json({ message: 'Şifre başarıyla güncellendi' });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Sunucu hatası' });
     }
 };
@@ -162,7 +158,7 @@ const signin = async (req, res) => {
         }
 
         
-        const token = jwt.sign({ email: kullanici.email, id: kullanici._id }, 'aos-secret-code', { expiresIn: '30d' });
+        const token = jwt.sign({ email: kullanici.email, id: kullanici._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
         res.status(200).json({ result: kullanici, token });
     } catch (error) {
