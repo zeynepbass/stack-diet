@@ -1,122 +1,101 @@
-import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import useAppStore from '../../../app/store';
+import { useForm } from '../../../shared/hooks/useForm';
 import FormField from '../../../shared/ui/molecules/FormField';
 import Button from '../../../shared/ui/atoms/Button';
+import AuthCard from '../components/AuthCard';
+import { validateRegister } from '../validation';
+
+const INITIAL_VALUES = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+};
 
 const RegisterPage = () => {
-  const { fetchRegister } = useAppStore();
+  const register = useAppStore((state) => state.register);
+  const loading = useAppStore((state) => state.authLoading);
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    firstName: '',
-    lastName: '',
-    password: '',
-    confirmPassword: '',
-  });
+  const { values, errors, handleChange, handleSubmit } = useForm(INITIAL_VALUES, validateRegister);
 
-  const [errorMessage, setErrorMessage] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!formData.email || !formData.password || !formData.firstName || !formData.lastName || !formData.confirmPassword) {
-      setErrorMessage('Lütfen tüm alanları doldurun.');
-      return;
+  const onSubmit = async (formData) => {
+    if (await register(formData)) {
+      toast.success('Aramıza hoş geldin!');
+      navigate('/ana-sayfa', { replace: true });
     }
-
-    if (formData.password !== formData.confirmPassword) {
-      setErrorMessage('Şifreler uyusmuyor.');
-      return;
-    }
-
-    await fetchRegister(formData);
-
-    setErrorMessage('Başarılı yönlendiriliyorsunuz :)');
-    setTimeout(() => {
-      navigate('/giris-yap');
-    }, 1000);
-  };
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-semibold text-center text-green-800">Kayıt Ol</h2>
+    <AuthCard title="Kayıt Ol">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-6 mt-4">
+        <FormField
+          label="İsim"
+          type="text"
+          name="firstName"
+          autoComplete="given-name"
+          value={values.firstName}
+          onChange={handleChange}
+          error={errors.firstName}
+          placeholder="İsim girin"
+        />
+        <FormField
+          label="Soyisim"
+          type="text"
+          name="lastName"
+          autoComplete="family-name"
+          value={values.lastName}
+          onChange={handleChange}
+          error={errors.lastName}
+          placeholder="Soyisim girin"
+        />
+        <FormField
+          label="E-posta"
+          type="email"
+          name="email"
+          autoComplete="email"
+          value={values.email}
+          onChange={handleChange}
+          error={errors.email}
+          placeholder="E-posta adresinizi girin"
+        />
+        <FormField
+          label="Parola"
+          type="password"
+          name="password"
+          autoComplete="new-password"
+          value={values.password}
+          onChange={handleChange}
+          error={errors.password}
+          placeholder="Parolanızı girin"
+        />
+        <FormField
+          label="Parola Tekrar"
+          type="password"
+          name="confirmPassword"
+          autoComplete="new-password"
+          value={values.confirmPassword}
+          onChange={handleChange}
+          error={errors.confirmPassword}
+          placeholder="Parolanızı tekrar girin"
+        />
 
-        {errorMessage && (
-          <div className="text-red-500 text-sm text-center mt-2">
-            {errorMessage}
-          </div>
-        )}
+        <Button type="submit" disabled={loading}>
+          {loading ? 'Kayıt yapılıyor...' : 'Kayıt Ol'}
+        </Button>
+      </form>
 
-        <form onSubmit={handleSubmit} className="space-y-6 mt-4">
-          <FormField
-            label="İsim"
-            type="text"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            placeholder="İsim girin"
-            required
-          />
-          <FormField
-            label="Soyisim"
-            type="text"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            placeholder="Soyisim girin"
-            required
-          />
-          <FormField
-            label="E-posta"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="E-posta adresinizi girin"
-            required
-          />
-          <FormField
-            label="Parola"
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Parolanızı girin"
-            required
-          />
-          <FormField
-            label="Parola Tekrar"
-            type="password"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            placeholder="Parolanızı tekrar girin"
-            required
-          />
-
-          <Button type="submit">Kayıt Ol</Button>
-        </form>
-
-        <div className="mt-4 text-center">
-          <p className="text-sm text-gray-600">
-            Hesabınız var mı?{' '}
-            <Link to="/giris-yap" className="text-green-600 hover:text-green-500">
-              Giriş Yap
-            </Link>
-          </p>
-        </div>
+      <div className="mt-4 text-center">
+        <p className="text-sm text-gray-600">
+          Hesabınız var mı?{' '}
+          <Link to="/giris-yap" className="text-green-600 hover:text-green-500">
+            Giriş Yap
+          </Link>
+        </p>
       </div>
-    </div>
+    </AuthCard>
   );
 };
 

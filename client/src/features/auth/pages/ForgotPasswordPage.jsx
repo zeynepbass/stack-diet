@@ -1,87 +1,56 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import useAppStore from '../../../app/store';
+import { useForm } from '../../../shared/hooks/useForm';
 import FormField from '../../../shared/ui/molecules/FormField';
 import Button from '../../../shared/ui/atoms/Button';
+import AuthCard from '../components/AuthCard';
+import { validateForgotPassword } from '../validation';
 
 const ForgotPasswordPage = () => {
-  const { fetchSifre } = useAppStore();
-  const [formData, setFormData] = useState({ email: '', newPassword: '', confirmPassword: '' });
-  const [errorMessage, setErrorMessage] = useState('');
-  const navigate = useNavigate();
+  const requestPasswordReset = useAppStore((state) => state.requestPasswordReset);
+  const loading = useAppStore((state) => state.authLoading);
+  const [sent, setSent] = useState(false);
+  const { values, errors, handleChange, handleSubmit } = useForm(
+    { email: '' },
+    validateForgotPassword
+  );
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!formData.email || !formData.newPassword || !formData.confirmPassword) {
-      setErrorMessage('Lütfen tüm alanları doldurun.');
-      return;
-    }
-
-    if (formData.newPassword !== formData.confirmPassword) {
-      setErrorMessage('Şifreler uyuşmuyor.');
-      return;
-    }
-
-    fetchSifre(formData);
-
-    setErrorMessage('Başarılı yönlendiriliyorsunuz :)');
-    setTimeout(() => {
-      navigate('/giris-yap');
-    }, 2000);
+  const onSubmit = async ({ email }) => {
+    setSent(await requestPasswordReset(email));
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-semibold text-center text-green-800">Şifremi Unuttum</h2>
-
-        {errorMessage && (
-          <div className="text-red-500 text-sm text-center mt-2">
-            {errorMessage}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+    <AuthCard title="Şifremi Unuttum">
+      {sent ? (
+        <p className="text-sm text-gray-700 text-center mt-4">
+          Bu adres kayıtlıysa şifre sıfırlama bağlantısı e-posta ile gönderildi. Bağlantı 1 saat
+          boyunca geçerlidir.
+        </p>
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-6 mt-4">
           <FormField
-            label="Email"
-            type="text"
+            label="E-posta"
+            type="email"
             name="email"
-            value={formData.email}
+            autoComplete="email"
+            value={values.email}
             onChange={handleChange}
-            placeholder="Email girin"
-            required
+            error={errors.email}
+            placeholder="E-posta adresinizi girin"
           />
-          <FormField
-            label="Yeni Parola"
-            type="password"
-            name="newPassword"
-            value={formData.newPassword}
-            onChange={handleChange}
-            placeholder="Yeni parola girin"
-            required
-          />
-          <FormField
-            label="Yeni Parolayı Tekrar Girin"
-            type="password"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            placeholder="Yeni tekrar girin"
-            required
-          />
-
-          <Button type="submit">Kaydet</Button>
+          <Button type="submit" disabled={loading}>
+            {loading ? 'Gönderiliyor...' : 'Sıfırlama Bağlantısı Gönder'}
+          </Button>
         </form>
-      </div>
-    </div>
+      )}
+
+      <p className="mt-4 text-center text-sm">
+        <Link to="/giris-yap" className="text-green-600 hover:text-green-500">
+          Giriş sayfasına dön
+        </Link>
+      </p>
+    </AuthCard>
   );
 };
 
