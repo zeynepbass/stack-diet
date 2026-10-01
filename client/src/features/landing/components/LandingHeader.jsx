@@ -1,5 +1,5 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faApple } from '@fortawesome/free-brands-svg-icons';
+import { Apple } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useCurrentUser } from '../../../shared/hooks/useCurrentUser';
 
 const NAV_LINKS = [
@@ -8,30 +8,36 @@ const NAV_LINKS = [
   { href: '#iletisim', label: 'İletişim' },
 ];
 
+const LINK_CLASSES = 'font-script text-green-800 text-lg hover:text-green-700';
+
 const LandingHeader = () => {
   const user = useCurrentUser();
 
   return (
-    <header className="fixed w-full bg-green-50 shadow-lg z-10 backgorund-i">
+    <header className="fixed w-full bg-green-50 shadow-lg z-10">
       <nav className="flex justify-between items-center py-4 px-8">
         <div className="flex items-center text-green-800">
-          <FontAwesomeIcon icon={faApple} size="2x" className="mr-2" />
-          <span className="text-2xl font-semibold" style={{ fontFamily: "'Dancing Script', cursive" }}>
-            Sağlıklı Yaşam
-          </span>
+          <Apple className="mr-2 h-8 w-8" />
+          <span className="font-script text-2xl font-semibold">Sağlıklı Yaşam</span>
         </div>
         <ul className="flex space-x-8">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
-              <a href={link.href} className="text-green-800 text-lg hover:text-green-700" style={{ fontFamily: "'Dancing Script', cursive" }}>
+              <a href={link.href} className={LINK_CLASSES}>
                 {link.label}
               </a>
             </li>
           ))}
           <li>
-            <a href={user ? '/ana-sayfa' : '/giris-yap'} className="text-green-800 text-lg hover:text-green-700" style={{ fontFamily: "'Dancing Script', cursive" }}>
-              Giriş Yap
-            </a>
+            {user ? (
+              <Link to="/ana-sayfa" className={LINK_CLASSES}>
+                Ana Sayfa
+              </Link>
+            ) : (
+              <Link to="/giris-yap" className={LINK_CLASSES}>
+                Giriş Yap
+              </Link>
+            )}
           </li>
         </ul>
       </nav>

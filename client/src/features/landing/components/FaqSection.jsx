@@ -1,19 +1,28 @@
 const FAQ_ITEMS = [
   { question: 'Topluluğa katılmak ücretli mi?', answer: 'Hayır, tamamen ücretsizdir.' },
-  { question: 'Soru sormak için üye olmam gerekiyor mu?', answer: 'Evet, topluluğumuza katılarak soru sorabilirsiniz.' },
-  { question: 'Uzman desteği sağlıyor musunuz?', answer: 'Evet, alanında uzman gönüllü üyelerimiz size yardımcı olabilir.' },
-  { question: 'Görselleri ve içerikleri paylaşabilir miyim?', answer: 'Kaynak belirttiğiniz sürece içerikleri paylaşmanızda sakınca yoktur.' },
+  {
+    question: 'Soru sormak için üye olmam gerekiyor mu?',
+    answer: 'Evet, topluluğumuza katılarak soru sorabilirsiniz.',
+  },
+  {
+    question: 'Uzman desteği sağlıyor musunuz?',
+    answer: 'Evet, alanında uzman gönüllü üyelerimiz size yardımcı olabilir.',
+  },
+  {
+    question: 'Görselleri ve içerikleri paylaşabilir miyim?',
+    answer: 'Kaynak belirttiğiniz sürece içerikleri paylaşmanızda sakınca yoktur.',
+  },
 ];
 
 const FaqSection = () => (
   <section className="py-16 bg-white px-4">
-    <h2 className="text-3xl font-bold text-green-800 mb-12 text-center" style={{ fontFamily: "'Dancing Script', cursive" }}>
+    <h2 className="font-script text-3xl font-bold text-green-800 mb-12 text-center">
       Sıkça Sorulan Sorular
     </h2>
-    <div className="flex flex-col md:flex-row items-center max-w-5xl mx-auto space-y-10 md:space-y-0 s">
-      <div className="w-full ">
+    <div className="flex flex-col md:flex-row items-center max-w-5xl mx-auto space-y-10 md:space-y-0">
+      <div className="w-full">
         <img
-          src="/images/10350996.png"
+          src="/images/faq.png"
           alt="diyet"
           className="rounded-xl object-contain w-full"
           style={{ height: '40vh' }}
