@@ -1,45 +1,62 @@
+import toast from 'react-hot-toast';
 import http from '../../../shared/lib/http';
+import { getErrorMessage } from '../../../shared/lib/errors';
 
-export const createPostsSlice = (set) => ({
-  data: [],
-  search: '',
+export const createPostsSlice = (set) => {
+  const replacePost = (updated) =>
+    set((state) => ({
+      posts: state.posts.map((post) => (post._id === updated._id ? updated : post)),
+    }));
 
-  setSearch: (newSearch) => set({ search: newSearch }),
-
-  fetchPost: async () => {
+  const mutate = async (request, apply) => {
     try {
-      const response = await http.get('/panel');
-      const fetchedData = response.data ? response.data.reverse() : [];
-      set({ data: fetchedData });
+      const { data } = await request();
+      apply(data);
+      return true;
     } catch (error) {
+      toast.error(getErrorMessage(error));
+      return false;
     }
-  },
+  };
 
-  fetchLike: async (postId, incrementValue) => {
-    try {
-      await http.put(`/panel/like/${postId}`);
-      set((state) => ({
-        data: state.data.map((post) =>
-          post._id === postId ? { ...post, likeCount: incrementValue } : post
-        ),
-      }));
-    } catch (error) {
-    }
-  },
+  return {
+    posts: [],
+    postsLoading: false,
+    postsError: null,
+    search: '',
 
-  fetchComment: async (formData) => {
-    try {
-      const user = JSON.parse(localStorage.getItem('user'));
-      const nickName = user?.result?.firstName;
+    setSearch: (search) => set({ search }),
 
-      const newPost = {
-        ...formData,
-        nickName,
-      };
+    fetchPosts: async () => {
+      set({ postsLoading: true, postsError: null });
+      try {
+        const { data } = await http.get('/posts');
+        set({ posts: data });
+      } catch (error) {
+        set({ postsError: getErrorMessage(error) });
+      } finally {
+        set({ postsLoading: false });
+      }
+    },
 
-      const response = await http.post('/panel', newPost);
-      set((state) => ({ data: [...state.data, response.data] }));
-    } catch (error) {
-    }
-  },
-});
+    createPost: (payload) =>
+      mutate(
+        () => http.post('/posts', payload),
+        (created) => set((state) => ({ posts: [created, ...state.posts] }))
+      ),
+
+    updatePost: (postId, payload) =>
+      mutate(() => http.put(`/posts/${postId}`, payload), replacePost),
+
+    deletePost: (postId) =>
+      mutate(
+        () => http.delete(`/posts/${postId}`),
+        () => set((state) => ({ posts: state.posts.filter((post) => post._id !== postId) }))
+      ),
+
+    toggleLike: (postId) => mutate(() => http.post(`/posts/${postId}/like`), replacePost),
+
+    addComment: (postId, text) =>
+      mutate(() => http.post(`/posts/${postId}/comments`, { text }), replacePost),
+  };
+};
