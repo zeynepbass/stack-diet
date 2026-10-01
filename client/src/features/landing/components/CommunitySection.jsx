@@ -15,9 +15,7 @@ const HIGHLIGHTS = [
 
 const CommunitySection = () => (
   <section id="toplulugumuz" className="py-16 bg-green-50 text-center">
-    <h2 className="text-4xl font-bold text-green-800 mb-12" style={{ fontFamily: "'Dancing Script', cursive" }}>
-      Topluluğumuz
-    </h2>
+    <h2 className="font-script text-4xl font-bold text-green-800 mb-12">Topluluğumuz</h2>
     <div className="flex flex-col items-center space-y-10 px-4 md:px-10">
       {HIGHLIGHTS.map((item, idx) => (
         <div

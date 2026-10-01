@@ -1,32 +1,41 @@
 import http from '../../../shared/lib/http';
+import { getErrorMessage } from '../../../shared/lib/errors';
+import useSessionStore from '../../../shared/store/sessionStore';
 
-export const createAuthSlice = () => ({
-  fetchRegister: async (formData) => {
+export const createAuthSlice = (set) => {
+  const submit = async (url, payload) => {
+    set({ authLoading: true, authError: null });
     try {
-      const response = await http.post('/uye-ol', formData);
-      if (response) {
-        localStorage.setItem('firstName', JSON.stringify(response.data.result.firstName));
-        localStorage.setItem('userRegister', JSON.stringify(response.data.result));
-      }
+      const { data } = await http.post(url, payload);
+      return data;
     } catch (error) {
+      set({ authError: getErrorMessage(error) });
+      return null;
+    } finally {
+      set({ authLoading: false });
     }
-  },
+  };
 
-  fetchLogin: async (formData) => {
-    try {
-      const response = await http.post('/signin', formData);
-      if (response) {
-        localStorage.setItem('user', JSON.stringify(response.data));
-        window.location.href = '/ana-sayfa';
-      }
-    } catch (error) {
+  const startSession = (session) => {
+    if (session) {
+      useSessionStore.getState().setSession(session);
     }
-  },
+    return Boolean(session);
+  };
 
-  fetchSifre: async (formData) => {
-    try {
-      await http.put('/sifre', formData);
-    } catch (error) {
-    }
-  },
-});
+  return {
+    authLoading: false,
+    authError: null,
+
+    clearAuthError: () => set({ authError: null }),
+
+    login: async (credentials) => startSession(await submit('/auth/login', credentials)),
+
+    register: async (formData) => startSession(await submit('/auth/register', formData)),
+
+    requestPasswordReset: async (email) =>
+      Boolean(await submit('/auth/forgot-password', { email })),
+
+    resetPassword: async (formData) => Boolean(await submit('/auth/reset-password', formData)),
+  };
+};

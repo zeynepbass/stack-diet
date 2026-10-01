@@ -1,57 +1,70 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
+import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { Bell } from 'lucide-react';
-import http from '../../../shared/lib/http';
-import { useCurrentUser } from '../../../shared/hooks/useCurrentUser';
+import useAppStore from '../../../app/store';
 
 const NotificationBell = () => {
-  const [open, setOpen] = useState(false);
-  const [notifications, setNotifications] = useState([]);
-  const boxRef = useRef(null);
-  const user = useCurrentUser();
+  const notifications = useAppStore((state) => state.notifications);
+  const error = useAppStore((state) => state.notificationsError);
+  const fetchNotifications = useAppStore((state) => state.fetchNotifications);
+  const markNotificationRead = useAppStore((state) => state.markNotificationRead);
+  const markAllNotificationsRead = useAppStore((state) => state.markAllNotificationsRead);
+
+  const unreadCount = notifications.filter((item) => !item.isRead).length;
 
   useEffect(() => {
-    http
-      .get('/api/notifications')
-      .then((res) => setNotifications(res.data))
-      .catch(() => {
-      });
-  }, []);
-
-  const filteredNotifications = notifications.filter(
-    (notif) => notif.receiver === user?.result?.firstName
-  );
+    fetchNotifications();
+  }, [fetchNotifications]);
 
   return (
-    <div className="relative inline-block text-left" ref={boxRef}>
-      <button
-        onClick={() => setOpen(!open)}
-        className="p-2 rounded-full hover:bg-gray-200 transition"
+    <Popover className="relative">
+      <PopoverButton
+        aria-label="Bildirimler"
+        className="relative p-2 rounded-full hover:bg-gray-200 transition focus:outline-none"
       >
         <Bell className="w-6 h-6 text-green-700" />
-      </button>
+        {unreadCount > 0 && (
+          <span className="absolute -top-0.5 -right-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-semibold text-white">
+            {unreadCount}
+          </span>
+        )}
+      </PopoverButton>
 
-      {open && (
-        <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg ring-1 ring-gray-200 z-50">
-          <div className="p-4 text-sm text-gray-800">
-            <p className="font-cursive text-2xl text-green-800" style={{ fontFamily: "'Dancing Script', cursive" }}>
-              Bildirimler
-            </p>
-
-            <ul className="mt-2 space-y-2 max-h-60 overflow-y-auto">
-              {filteredNotifications.length > 0 ? (
-                filteredNotifications.map((notif, i) => (
-                  <li key={i} className="border-b pb-2 text-sm text-gray-800">
-                    💬 {notif.message}
-                  </li>
-                ))
-              ) : (
-                <li className="text-gray-500">Henüz sana ait bildirim yok.</li>
-              )}
-            </ul>
+      <PopoverPanel className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg ring-1 ring-gray-200 z-50">
+        <div className="p-4 text-sm text-gray-800">
+          <div className="flex items-center justify-between">
+            <p className="font-script text-2xl text-green-800">Bildirimler</p>
+            {unreadCount > 0 && (
+              <button
+                onClick={markAllNotificationsRead}
+                className="text-xs text-green-700 hover:underline"
+              >
+                Tümünü okundu işaretle
+              </button>
+            )}
           </div>
+
+          {error && <p className="mt-2 text-red-600">{error}</p>}
+
+          <ul className="mt-2 space-y-2 max-h-60 overflow-y-auto">
+            {notifications.map((item) => (
+              <li key={item._id} className="border-b pb-2">
+                <button
+                  onClick={() => markNotificationRead(item._id)}
+                  disabled={item.isRead}
+                  className={`w-full text-left ${item.isRead ? 'text-gray-500' : 'font-semibold text-gray-800'}`}
+                >
+                  💬 {item.message}
+                </button>
+              </li>
+            ))}
+            {notifications.length === 0 && !error && (
+              <li className="text-gray-500">Henüz sana ait bildirim yok.</li>
+            )}
+          </ul>
         </div>
-      )}
-    </div>
+      </PopoverPanel>
+    </Popover>
   );
 };
 
