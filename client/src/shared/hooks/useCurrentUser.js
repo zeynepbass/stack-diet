@@ -1,7 +1,5 @@
-export function useCurrentUser() {
-  return JSON.parse(localStorage.getItem('user'));
-}
+import useSessionStore from '../store/sessionStore';
 
-export function useCurrentUserProfile() {
-  return JSON.parse(localStorage.getItem('userProfile'));
+export function useCurrentUser() {
+  return useSessionStore((state) => state.user);
 }
