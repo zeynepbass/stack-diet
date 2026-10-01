@@ -1,87 +1,89 @@
+# Stack Diet
 
-Stack Diet, kullanıcıların sağlıklı yaşam odaklı içerikler paylaşabildiği, gönderileri beğenip yorumlayabildiği ve diğer kullanıcılarla etkileşim kurabildiği sosyal bir web uygulamasıdır. 
+Stack Diet, kullanıcıların sağlıklı yaşam odaklı gönderiler paylaşabildiği, gönderileri beğenip yorumlayabildiği ve birbirlerinin profillerini gezebildiği bir topluluk uygulamasıdır. Kayıt/giriş, e-posta ile şifre sıfırlama, gönderi arama, yorum bildirimleri, profil fotoğrafı ve vücut kitle endeksi hesaplayıcı içerir.
 
----
+## Teknolojiler
 
-## 🔍 Proje Özellikleri
+- **Client:** React 19, Vite, React Router, Zustand, Tailwind CSS, Headless UI, Axios, EmailJS
+- **Server:** Node.js, Express, MongoDB (Mongoose), JWT, Zod, Nodemailer, Pino
+- **Test ve araçlar:** Jest, Supertest, Vitest, Testing Library, ESLint, Prettier, GitHub Actions
 
-### ✅ Kullanıcı Girişi
-- Kayıt olabilir ve giriş yapabilir.  
-- Şifre sıfırlama işlemi yapılabilir.
+## Kurulum
 
-### ✅ Gönderi Paylaşımı & Etkileşim
-- Gönderi paylaşabilir, beğenebilir ve yorum yapabilir.  
-- En çok beğeni alan gönderileri görebilir.  
-- Paylaşılan gönderilerde arama yapılabilir.
+Node.js 22 ve çalışan bir MongoDB gerekir.
 
-### ✅ Profil ve Kullanıcı Yönetimi
-- Diğer kullanıcıların profillerine ulaşabilir.  
-- Son gönderilerini görebilir.  
-- Görsel (profil/gönderi) güncellemesi yapabilir.  
-- Kendi gönderilerini düzenleyebilir veya silebilir.  
-- Profilime git sekmesinden kendi gönderilerini yönetebilir.  
+```bash
+git clone https://github.com/zeynepbass/stack-diet.git
+cd stack-diet
+npm run install:all
+cp server/.env.example server/.env
+cp client/.env.example client/.env
+npm run dev
+```
 
-### ✅ Arama & Bildirimler
-- Kullanıcı araması yapabilir ve profillere gidebilir.  
-- Yorum yapıldığında bildirim alabilir.  
-- Soru soran kullanıcıları ve tüm kullanıcıları listeleyebilir.
+Client `http://localhost:5173`, API `http://localhost:6079` adresinde açılır.
 
----
+| Komut                             | Açıklama                                  |
+| --------------------------------- | ----------------------------------------- |
+| `npm run dev`                     | Client ve server'ı birlikte çalıştırır    |
+| `npm test`                        | Server ve client testlerini çalıştırır    |
+| `npm run lint`                    | ESLint kontrolü                           |
+| `npm run format`                  | Prettier ile formatlar                    |
+| `npm run build`                   | Client'ı production için derler           |
+| `npm run migrate --prefix server` | Eski şemadaki kayıtları yeni şemaya taşır |
 
-## 🛠️ Kullanılan Teknolojiler
+## Ortam değişkenleri
 
-**Frontend:** React.js, Tailwind CSS, FontAwesome (ikonlar için)  
-**Backend:** Node.js  
-**State Management:** Zustand  
-**Email Gönderimi:** React EmailJS paketi  
-**Veri Yönetimi:** MongoDB & Express.js  
+`server/.env`
 
----
+| Değişken                                           | Açıklama                                                                                                                          |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `NODE_ENV`                                         | `development`, `test` veya `production`                                                                                           |
+| `PORT`                                             | API portu (varsayılan `6079`)                                                                                                     |
+| `MONGO_URI`                                        | MongoDB bağlantı adresi                                                                                                           |
+| `JWT_SECRET`                                       | En az 32 karakterlik imzalama anahtarı                                                                                            |
+| `JWT_EXPIRES_IN`                                   | Token süresi (varsayılan `7d`)                                                                                                    |
+| `CLIENT_URL`                                       | CORS için izinli origin ve şifre sıfırlama bağlantısının adresi                                                                   |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` | Şifre sıfırlama e-postası için SMTP bilgileri. Production'da zorunlu; geliştirmede boş bırakılırsa bağlantı server loguna yazılır |
+| `MAIL_FROM`                                        | Gönderen adresi                                                                                                                   |
 
-## 💡 Proje Hedefleri
-- Kullanıcı deneyimini geliştirmek  
-- Dinamik kullanıcı profilleri oluşturmak  
-- Etkileşimli gönderi sistemi kurmak  
-- Gerçek zamanlı bildirim ve etkileşimleri uygulamak  
-- Teknik altyapıyı güçlendirmek ve full-stack yetkinliği artırmak
+`client/.env`
 
----
+| Değişken                                                                         | Açıklama                                |
+| -------------------------------------------------------------------------------- | --------------------------------------- |
+| `VITE_API_URL`                                                                   | API adresi                              |
+| `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID`, `VITE_EMAILJS_PUBLIC_KEY` | İletişim formu için EmailJS anahtarları |
 
-## Arayüzler
+## Ekran görüntüleri
 
-<p align="center">
-  <img src="./client/public/images/screenshots/1745447877856.jpeg" alt="Ana Sayfa" width="900">
-</p>
+### Karşılama sayfası
 
-<p align="center">
-  <img src="./client/public/images/screenshots/1745447875236.jpeg" alt="Dashboards" width="900">
-</p>
+![Karşılama sayfası](client/public/images/screenshots/landing.png)
 
-<p align="center">
-  <img src="./client/public/images/screenshots/1745447875070.jpeg" alt="Dashboards" width="900">
-</p>
+### Ana sayfa
 
+![Ana sayfa](client/public/images/screenshots/home.png)
 
-<p align="center">
-  <img src="./client/public/images/screenshots/1745447874940.jpeg" alt="Kullanici" width="900">
-</p>
+### Profil
 
-<p align="center">
-  <img src="./client/public/images/screenshots/1745447874900.jpeg" alt="Dashboards" width="900">
-</p>
-<p align="center">
-  <img src="./client/public/images/screenshots/1745447873739.jpeg" alt="Profile" width="900">
-</p>
+![Profil](client/public/images/screenshots/profile.png)
 
-<p align="center">
-  <img src="./client/public/images/screenshots/1745447873701.jpeg" alt="Sifremi Unuttum" width="900">
-</p>
-<p align="center">
-  <img src="./client/public/images/screenshots/1745447873514.jpeg" alt="Oneri yapan kullanicilar" width="900">
-</p>
-<p align="center">
-  <img src="./client/public/images/screenshots/1745447873210.jpeg" alt="kayit ol" width="900">
-</p>
-<p align="center">
-  <img src="./client/public/images/screenshots/1745447873158.jpeg" alt="giris yap" width="900">
-</p>
+### Bildirimler
+
+![Bildirimler](client/public/images/screenshots/notifications.png)
+
+### Kullanıcı arama
+
+![Kullanıcı arama](client/public/images/screenshots/users.png)
+
+### Giriş
+
+![Giriş](client/public/images/screenshots/login.png)
+
+### Kayıt
+
+![Kayıt](client/public/images/screenshots/register.png)
+
+### Şifremi unuttum
+
+![Şifremi unuttum](client/public/images/screenshots/forgot-password.png)
